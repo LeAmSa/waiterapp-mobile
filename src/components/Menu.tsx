@@ -9,7 +9,11 @@ import { ProductDetailsModal } from "./ProductDetailsModal";
 import { Separator } from "./Separator";
 import { ProductProps } from "../@types/product";
 
-export function Menu() {
+interface MenuProps {
+  onAddToCart: (product: ProductProps) => void;
+}
+
+export function Menu({ onAddToCart }: MenuProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductProps | null>(
     null
@@ -30,6 +34,7 @@ export function Menu() {
             product={item}
             setIsModalVisible={setIsModalVisible}
             setSelectedProduct={setSelectedProduct}
+            onAddToCart={onAddToCart}
           />
         )}
         mt="6"
@@ -44,6 +49,7 @@ export function Menu() {
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
         product={selectedProduct}
+        onAddToCart={onAddToCart}
       />
     </>
   );
