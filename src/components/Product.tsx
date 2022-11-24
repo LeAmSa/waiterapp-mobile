@@ -11,12 +11,14 @@ interface CustomProductProps {
   product: ProductProps;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedProduct: React.Dispatch<React.SetStateAction<ProductProps | null>>;
+  onAddToCart: (product: ProductProps) => void;
 }
 
 export function Product({
   product,
   setIsModalVisible,
   setSelectedProduct,
+  onAddToCart,
 }: CustomProductProps) {
   function handleOpenProductDetailsModal() {
     setIsModalVisible(true);
@@ -49,7 +51,7 @@ export function Product({
         </HStack>
       </TouchableOpacity>
       <Box position="absolute" bottom="0" right="0">
-        <TouchableOpacity onPress={() => alert("Item adicionado!")}>
+        <TouchableOpacity onPress={() => onAddToCart(product)}>
           <PlusCircle color="#D73035" />
         </TouchableOpacity>
       </Box>
