@@ -18,7 +18,10 @@ export const THEME = extendTheme({
       500: "#333333",
     },
 
-    black: "#000000",
+    black: {
+      default: "#000000",
+      opacity: "#00000050",
+    },
   },
 
   fonts: {
