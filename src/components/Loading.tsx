@@ -4,8 +4,8 @@ import { Center } from "native-base";
 
 export function Loading() {
   return (
-    <Center>
-      <ActivityIndicator color="red.default" />
+    <Center w="full" h="full">
+      <ActivityIndicator color="#D73035" />
     </Center>
   );
 }
