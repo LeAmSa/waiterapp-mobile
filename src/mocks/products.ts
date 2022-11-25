@@ -37,3 +37,6 @@ export const products = [
     ingredients: [],
   },
 ];
+
+//Ingredients shape to create product
+// [{"name": "Mussarela", "icon": "🧀"},{"name": "Parmesão","icon": "🧀"},{"name": "Gorgonzola","icon": "🧀"},{"name": "Brie","icon": "🧀"}]
