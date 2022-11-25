@@ -1,30 +1,46 @@
+import { useState } from "react";
 import { Text, FlatList, HStack, VStack } from "native-base";
 
 import { CartItemProps } from "../@types/cartItem";
+import { ProductProps } from "../@types/product";
 
 import { Button } from "./Button";
 import { CartItem } from "./CartItem";
 import { Separator } from "./Separator";
+import { ConfirmOrderModal } from "./ConfirmOrderModal";
 
 import { formatCurrency } from "../utils/formatCurrency";
-import { ProductProps } from "../@types/product";
 
 interface CartProps {
   cartItems: CartItemProps[];
   onAddToCart: (product: ProductProps) => void;
   onDecrementItemFromCart: (product: ProductProps) => void;
+  onConfirmOrder: () => void;
 }
 
 export function Cart({
   cartItems,
   onAddToCart,
   onDecrementItemFromCart,
+  onConfirmOrder,
 }: CartProps) {
+  const [isConfirmOrderModalVisible, setIsConfirmOrderModalVisible] =
+    useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const isCartEmpty = cartItems.length === 0;
 
   const total = cartItems.reduce((acc, cartItem) => {
     return acc + cartItem.quantity * cartItem.product.price;
   }, 0);
+
+  function handleConfirmOrder() {
+    setIsConfirmOrderModalVisible(true);
+  }
+
+  function handleOk() {
+    setIsConfirmOrderModalVisible(false);
+    onConfirmOrder();
+  }
 
   return (
     <>
@@ -62,10 +78,20 @@ export function Cart({
           )}
         </VStack>
 
-        <Button maxW="200" disabled={isCartEmpty}>
+        <Button
+          maxW="200"
+          disabled={isCartEmpty}
+          onPress={handleConfirmOrder}
+          isLoading={isLoading}
+        >
           Confirmar pedido
         </Button>
       </HStack>
+
+      <ConfirmOrderModal
+        visible={isConfirmOrderModalVisible}
+        onConfirm={handleOk}
+      />
     </>
   );
 }
