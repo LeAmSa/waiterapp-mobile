@@ -1,6 +1,9 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import { VStack, HStack, Center, Box } from "native-base";
+
+import axios from "axios";
+
+import { API_BASE_URL } from "@env";
 
 import { Button } from "./Button";
 import { Categories } from "./Categories";
@@ -9,19 +12,19 @@ import { Menu } from "./Menu";
 import { NewOrderModal } from "./NewOrderModal";
 import { Cart } from "./Cart";
 import { Loading } from "./Loading";
+import { Empty } from "./Empty";
 
 import { CartItemProps } from "../@types/cartItem";
 import { ProductProps } from "../@types/product";
-
-import { products as mockProducts } from "../mocks/products";
-import { Empty } from "./Empty";
+import { CategoryProps } from "../@types/category";
 
 export function Main() {
   const [showModal, setShowModal] = useState(false);
   const [selectedTable, setSelectedTable] = useState("");
   const [cartItems, setCartItems] = useState<CartItemProps[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [products, setProducts] = useState<ProductProps[]>(mockProducts);
+  const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState<ProductProps[]>([]);
+  const [categories, setCategories] = useState<CategoryProps[]>([]);
 
   function handleSaveTable(table: string) {
     setSelectedTable(table);
@@ -86,6 +89,17 @@ export function Main() {
     });
   }
 
+  useEffect(() => {
+    Promise.all([
+      axios.get(`${API_BASE_URL}/categories`),
+      axios.get(`${API_BASE_URL}/products`),
+    ]).then(([categoriesResponse, productsResponse]) => {
+      setCategories(categoriesResponse.data);
+      setProducts(productsResponse.data);
+      setIsLoading(false);
+    });
+  }, []);
+
   return (
     <VStack flex={1} bgColor="gray.100" safeArea>
       {!isLoading ? (
@@ -95,7 +109,7 @@ export function Main() {
             onCancelOrder={handleResetOrder}
           />
           <HStack h="80px">
-            <Categories />
+            <Categories categories={categories} />
           </HStack>
 
           {products.length > 0 ? (
