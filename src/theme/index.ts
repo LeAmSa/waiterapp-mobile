@@ -33,6 +33,7 @@ export const THEME = extendTheme({
   fontSizes: {
     sm: 14,
     md: 16,
-    lg: 24,
+    lg: 18,
+    xl: 24,
   },
 });
