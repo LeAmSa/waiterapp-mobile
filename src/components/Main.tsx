@@ -1,29 +1,33 @@
 import { useState } from "react";
 
 import { VStack, HStack, Center, Box } from "native-base";
+
 import { Button } from "./Button";
 import { Categories } from "./Categories";
-
 import { Header } from "./Header";
 import { Menu } from "./Menu";
 import { NewOrderModal } from "./NewOrderModal";
 import { Cart } from "./Cart";
+import { Loading } from "./Loading";
 
 import { CartItemProps } from "../@types/cartItem";
 import { ProductProps } from "../@types/product";
 
-import { products } from "../mocks/products";
+import { products as mockProducts } from "../mocks/products";
+import { Empty } from "./Empty";
 
 export function Main() {
   const [showModal, setShowModal] = useState(false);
   const [selectedTable, setSelectedTable] = useState("");
   const [cartItems, setCartItems] = useState<CartItemProps[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [products, setProducts] = useState<ProductProps[]>(mockProducts);
 
   function handleSaveTable(table: string) {
     setSelectedTable(table);
   }
 
-  function handleCancelOrder() {
+  function handleResetOrder() {
     setSelectedTable("");
     setCartItems([]);
   }
@@ -84,15 +88,27 @@ export function Main() {
 
   return (
     <VStack flex={1} bgColor="gray.100" safeArea>
-      <Header selectedTable={selectedTable} onCancelOrder={handleCancelOrder} />
+      {!isLoading ? (
+        <>
+          <Header
+            selectedTable={selectedTable}
+            onCancelOrder={handleResetOrder}
+          />
+          <HStack h="80px">
+            <Categories />
+          </HStack>
 
-      <HStack h="80px">
-        <Categories />
-      </HStack>
-
-      <VStack flex={1} px="6">
-        <Menu onAddToCart={handleAddToCart} />
-      </VStack>
+          {products.length > 0 ? (
+            <VStack flex={1} px="6">
+              <Menu products={products} onAddToCart={handleAddToCart} />
+            </VStack>
+          ) : (
+            <Empty />
+          )}
+        </>
+      ) : (
+        <Loading />
+      )}
 
       {!selectedTable ? (
         <Center minH="110px" bgColor="white" px="6">
@@ -104,6 +120,7 @@ export function Main() {
             cartItems={cartItems}
             onAddToCart={handleAddToCart}
             onDecrementItemFromCart={handleDecrementItemFromCart}
+            onConfirmOrder={handleResetOrder}
           />
         </Box>
       )}
