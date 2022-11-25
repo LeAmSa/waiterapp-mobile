@@ -2,18 +2,17 @@ import { useState } from "react";
 
 import { FlatList } from "native-base";
 
-import { products } from "../mocks/products";
-
 import { Product } from "./Product";
 import { ProductDetailsModal } from "./ProductDetailsModal";
 import { Separator } from "./Separator";
 import { ProductProps } from "../@types/product";
 
 interface MenuProps {
+  products: ProductProps[];
   onAddToCart: (product: ProductProps) => void;
 }
 
-export function Menu({ onAddToCart }: MenuProps) {
+export function Menu({ products, onAddToCart }: MenuProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductProps | null>(
     null
