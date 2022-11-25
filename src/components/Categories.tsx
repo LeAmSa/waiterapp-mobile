@@ -2,9 +2,13 @@ import { Text, Center, FlatList } from "native-base";
 import { TouchableOpacity } from "react-native";
 import { useState } from "react";
 
-import { categories } from "../mocks/categories";
+import { CategoryProps } from "../@types/category";
 
-export function Categories() {
+interface CategoriesProps {
+  categories: CategoryProps[];
+}
+
+export function Categories({ categories }: CategoriesProps) {
   const [selectedCategory, setSelectedCategory] = useState("");
 
   function handleSelectCategory(categoryId: string) {
