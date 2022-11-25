@@ -1,6 +1,8 @@
 import { TouchableOpacity } from "react-native";
 import { HStack, VStack, Image, Text, Box } from "native-base";
 
+import { API_BASE_URL } from "@env";
+
 import { PlusCircle } from "phosphor-react-native";
 
 import { formatCurrency } from "../utils/formatCurrency";
@@ -30,8 +32,7 @@ export function Product({
       <TouchableOpacity onPress={() => handleOpenProductDetailsModal()}>
         <HStack alignItems="center">
           <Image
-            // source={{ uri: `http://192.168.15.5:3333/uploads/${imagePath}` }}
-            source={{ uri: "https://wallpaperaccess.com/full/317501.jpg" }}
+            source={{ uri: `${API_BASE_URL}/uploads/${product.imagePath}` }}
             alt={product.name}
             size={150}
             rounded="lg"
