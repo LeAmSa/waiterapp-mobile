@@ -2,6 +2,8 @@ import { ImageBackground } from "react-native";
 
 import { Modal, Text, VStack, HStack } from "native-base";
 
+import { API_BASE_URL } from "@env";
+
 import { ProductProps } from "../@types/product";
 
 import { Ingredient } from "./Ingredient";
@@ -45,7 +47,7 @@ export function ProductDetailsModal({
         />
         <Modal.Header p="0">
           <ImageBackground
-            source={{ uri: "https://wallpaperaccess.com/full/317501.jpg" }}
+            source={{ uri: `${API_BASE_URL}/uploads/${product.imagePath}` }}
             style={{ width: "100%", height: 200 }}
           />
         </Modal.Header>
