@@ -10,7 +10,7 @@ import {
 
 import { Loading } from "./src/components/Loading";
 
-import { NativeBaseProvider, Box } from "native-base";
+import { NativeBaseProvider, StatusBar } from "native-base";
 import { THEME } from "./src/theme";
 import { Main } from "./src/components/Main";
 
@@ -23,6 +23,11 @@ export default function App() {
 
   return (
     <NativeBaseProvider theme={THEME}>
+      <StatusBar
+        translucent
+        barStyle="dark-content"
+        backgroundColor="#F2F2F2"
+      />
       {fontsLoaded ? <Main /> : <Loading />}
     </NativeBaseProvider>
   );
