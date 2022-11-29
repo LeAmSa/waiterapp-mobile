@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { VStack, HStack, Center, Box } from "native-base";
 
-import axios from "axios";
-
-import { API_BASE_URL } from "@env";
+import { api } from "../utils/api";
 
 import { Button } from "./Button";
 import { Categories } from "./Categories";
@@ -25,6 +23,7 @@ export function Main() {
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [categories, setCategories] = useState<CategoryProps[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
 
   function handleSaveTable(table: string) {
     setSelectedTable(table);
@@ -89,30 +88,47 @@ export function Main() {
     });
   }
 
+  async function handleSelectProductByCategory(categoryId: string) {
+    const route = !categoryId
+      ? "/products"
+      : `/categories/${categoryId}/products`;
+
+    try {
+      setIsLoadingProducts(true);
+      const { data } = await api.get(route);
+      setProducts(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoadingProducts(false);
+    }
+  }
+
   useEffect(() => {
-    Promise.all([
-      axios.get(`${API_BASE_URL}/categories`),
-      axios.get(`${API_BASE_URL}/products`),
-    ]).then(([categoriesResponse, productsResponse]) => {
-      setCategories(categoriesResponse.data);
-      setProducts(productsResponse.data);
-      setIsLoading(false);
-    });
+    Promise.all([api.get("/categories"), api.get("/products")]).then(
+      ([categoriesResponse, productsResponse]) => {
+        setCategories(categoriesResponse.data);
+        setProducts(productsResponse.data);
+        setIsLoading(false);
+      }
+    );
   }, []);
 
   return (
     <VStack flex={1} bgColor="gray.100" safeArea>
+      <Header selectedTable={selectedTable} onCancelOrder={handleResetOrder} />
       {!isLoading ? (
         <>
-          <Header
-            selectedTable={selectedTable}
-            onCancelOrder={handleResetOrder}
-          />
           <HStack h="80px">
-            <Categories categories={categories} />
+            <Categories
+              categories={categories}
+              onSelectProductByCategory={handleSelectProductByCategory}
+            />
           </HStack>
 
-          {products.length > 0 ? (
+          {isLoadingProducts ? (
+            <Loading />
+          ) : products.length > 0 ? (
             <VStack flex={1} px="6">
               <Menu products={products} onAddToCart={handleAddToCart} />
             </VStack>
@@ -126,12 +142,15 @@ export function Main() {
 
       {!selectedTable ? (
         <Center minH="110px" bgColor="white" px="6">
-          <Button onPress={() => setShowModal(true)}>Novo Pedido</Button>
+          <Button onPress={() => setShowModal(true)} disabled={isLoading}>
+            Novo Pedido
+          </Button>
         </Center>
       ) : (
         <Box bgColor="white" minH="110px" px="6">
           <Cart
             cartItems={cartItems}
+            selectedTable={selectedTable}
             onAddToCart={handleAddToCart}
             onDecrementItemFromCart={handleDecrementItemFromCart}
             onConfirmOrder={handleResetOrder}

@@ -10,9 +10,11 @@ import { Separator } from "./Separator";
 import { ConfirmOrderModal } from "./ConfirmOrderModal";
 
 import { formatCurrency } from "../utils/formatCurrency";
+import { api } from "../utils/api";
 
 interface CartProps {
   cartItems: CartItemProps[];
+  selectedTable: string;
   onAddToCart: (product: ProductProps) => void;
   onDecrementItemFromCart: (product: ProductProps) => void;
   onConfirmOrder: () => void;
@@ -20,6 +22,7 @@ interface CartProps {
 
 export function Cart({
   cartItems,
+  selectedTable,
   onAddToCart,
   onDecrementItemFromCart,
   onConfirmOrder,
@@ -33,8 +36,23 @@ export function Cart({
     return acc + cartItem.quantity * cartItem.product.price;
   }, 0);
 
-  function handleConfirmOrder() {
-    setIsConfirmOrderModalVisible(true);
+  async function handleConfirmOrder() {
+    try {
+      setIsLoading(true);
+      const payload = {
+        table: selectedTable,
+        products: cartItems.map((cartItem) => ({
+          product: cartItem.product._id,
+          quantity: cartItem.quantity,
+        })),
+      };
+      await api.post("/orders", payload);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+      setIsConfirmOrderModalVisible(true);
+    }
   }
 
   function handleOk() {
