@@ -1,4 +1,4 @@
-import { VStack, HStack, Text, Button, Box } from "native-base";
+import { VStack, HStack, Center, Text, Button, Box } from "native-base";
 
 interface HeaderProps {
   selectedTable: string;
@@ -31,7 +31,7 @@ export function Header({ selectedTable, onCancelOrder }: HeaderProps) {
             </Button>
           </HStack>
 
-          <Box
+          <Center
             p="3"
             mt="6"
             w="full"
@@ -40,10 +40,10 @@ export function Header({ selectedTable, onCancelOrder }: HeaderProps) {
             borderWidth="1"
             rounded="lg"
           >
-            <Text color="gray.300" fontSize="18">
+            <Text color="gray.400" fontSize="18">
               Mesa {selectedTable}
             </Text>
-          </Box>
+          </Center>
         </>
       )}
     </VStack>
