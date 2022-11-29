@@ -6,6 +6,7 @@ import { CartItemProps } from "../@types/cartItem";
 import { PlusCircle, MinusCircle } from "phosphor-react-native";
 import { formatCurrency } from "../utils/formatCurrency";
 import { ProductProps } from "../@types/product";
+import { API_BASE_URL } from "@env";
 
 interface ThisCartItemProps extends CartItemProps {
   onAddToCart: (product: ProductProps) => void;
@@ -22,7 +23,7 @@ export function CartItem({
     <HStack w="full" py="2" justifyContent="space-between" alignItems="center">
       <HStack space="3">
         <Image
-          source={{ uri: "https://wallpaperaccess.com/full/317501.jpg" }}
+          source={{ uri: `${API_BASE_URL}/uploads/${product.imagePath}` }}
           alt={product.name}
           w="12"
           h="12"
